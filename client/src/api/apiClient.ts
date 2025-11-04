@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { showErrorPopup } from '@/lib/utils';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_APP_URL + '/api/v1/' || 'http://localhost:5000/api/v1/',
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
 });
 
 // Optional: inject token

@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -9,12 +9,9 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (mobile: string, otp: string) => Promise<boolean>;
-  register: (name: string, mobile: string, otp: string) => Promise<boolean>;
   logout: () => void;
+  setUser: Dispatch<SetStateAction<User>>;
 }
-
-const BASE_URL = "http://localhost:5000/api/v1/auth"
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -28,59 +25,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // }
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-      try {
-        const response = await fetch(`${BASE_URL}/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-        })
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          return errorData.message || response.statusText;
-        }
-        const data = await response.json();
-        const { user } = data;
-        setUser(user);
-        return true;
-      }
-      catch(error) {
-        console.log(error);
-        return false;
-      }    
-    };
+  
 
-  const register = async (name: string, email: string, password: string): Promise<boolean> => {
-      try {
-        const response = await fetch(`${BASE_URL}/register`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name, email, password }),
-        })        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error('Registration Failed', errorData.message || response.statusText)
-          return errorData.message || response.statusText;
-        }
-        return true;
-      }
-      catch(error) {
-        console.log(error);
-        return false;
-      }    
-  };
+  // const register = async (name: string, email: string, password: string): Promise<boolean> => {
+  //     try {
+  //       const response = await fetch(`${BASE_URL}/register`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({ name, email, password }),
+  //       })        
+  //       if (!response.ok) {
+  //         const errorData = await response.json().catch(() => ({}));
+  //         console.error('Registration Failed', errorData.message || response.statusText)
+  //         return errorData.message || response.statusText;
+  //       }
+  //       return true;
+  //     }
+  //     catch(error) {
+  //       console.log(error);
+  //       return false;
+  //     }    
+  // };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );
