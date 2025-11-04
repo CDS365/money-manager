@@ -1,8 +1,10 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Query, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "./services/auth.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import express from "express";
+import { CurrentUser } from "./decorators/current-user";
+import { JwtGuard } from "src/guards/auth.guard";
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -29,5 +31,14 @@ export class AuthController {
     @Get('verify-email')
     verifyEmail(@Query('token') token: string) {
        return this.authService.verifyEmail(token);        
+    }
+
+    @Get("/me")
+    @UseGuards(JwtGuard)
+    async getProfile(@CurrentUser() currentUser: any) {
+    //    const user = await this.authService.getProfile(currentUser.email);
+    //    if(!user)
+    //     throw new NotFoundException("user is no longer part of the system");
+    return { status: 'success', user: currentUser};
     }
 }

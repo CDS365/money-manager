@@ -24,9 +24,9 @@ type RegisterFormValues = {
 };
 
 export default function Auth() {
+  const { setUser, isAuthenticated } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
-  const { setUser, isAuthenticated } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [logErrors, setLogErrors] = useState("")
   // Login form

@@ -55,4 +55,9 @@ export class AuthService {
         this.userRepo.save(user);
         return { message: "user verified successfully"}
     }
+
+    getProfile(email: string) {
+        return this.userRepo.findOne({where: {email}});
+    }
 }
+

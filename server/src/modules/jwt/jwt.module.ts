@@ -3,6 +3,7 @@ import { Module, Global } from '@nestjs/common';
 import { JwtModule as NestJwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtServiceCustom } from './jwt.service';
+import { JwtGuard } from 'src/guards/auth.guard';
 
 @Global()
 @Module({
@@ -18,7 +19,7 @@ import { JwtServiceCustom } from './jwt.service';
       }),
     }),
   ],
-  providers: [JwtServiceCustom],
+  providers: [JwtServiceCustom, JwtGuard],
   exports: [JwtServiceCustom],
 })
 export class AppJwtModule {}

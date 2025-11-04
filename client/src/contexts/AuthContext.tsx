@@ -1,4 +1,6 @@
+import { callApi } from '@/api/apiService';
 import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export interface User {
   id: string;
@@ -18,11 +20,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  function successHandler(data: { message: string, user: User}){
+      setUser(data.user);
+  }  
+
+  async function fetchTheUser() {
+    callApi({endpoint: "auth/me", method: 'get', onSuccess: successHandler})
+  }
+
   useEffect(() => {
-    // const savedUser = localStorage.getItem('user');
-    // if (savedUser) {
-    //   setUser(JSON.parse(savedUser));
-    // }
+    fetchTheUser();
   }, []);
 
   
