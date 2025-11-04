@@ -6,8 +6,9 @@ import { appConfig } from './config/app.config';
 import { authConfig } from './config/auth.config';
 import { databaseConfig } from './config/database.config';
 import { mailerConfig } from './config/mail.config';
+import { FinanceModule } from './modules/finance/finance.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, load: [appConfig, authConfig, databaseConfig, mailerConfig] }), DatabaseModule, AuthModule]
+  imports: [ConfigModule.forRoot({ isGlobal: true, load: [appConfig, authConfig, databaseConfig, mailerConfig] }), DatabaseModule, AuthModule, FinanceModule]
 })
 export class AppModule {}
