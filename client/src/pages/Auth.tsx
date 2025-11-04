@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, User } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,6 +10,7 @@ import { motion } from 'framer-motion';
 import { Wallet } from 'lucide-react';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
+import { callApi } from '@/api/apiService';
 
 type LoginFormValues = {
   email: string;
@@ -24,9 +26,9 @@ type RegisterFormValues = {
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
-  const { login, register, isAuthenticated } = useAuth();
+  const { setUser, isAuthenticated } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [logErrors, setLogErrors] = useState("")
   // Login form
   const {
     register: registerLogin,
@@ -54,35 +56,37 @@ export default function Auth() {
     navigate('/dashboard');
   }
 
+  function onLoginSuccess(data: User) {
+    setUser(data);
+    toast.success("Login Successful");
+  }
+
+  function onLoginError(data: any) {
+    setLogErrors(data.response.data.message);
+  }
+
+  function onRegisterSuccess(data: User) {
+    toast.success('Registration successful!')
+    setIsSubmitting(false);
+    navigate("/auth/register/success")
+  }
+  function onRegisterError(data: any) {
+    setLogErrors(data.response.data.message);
+    setIsSubmitting(false);
+  }
+
+
   const handleLogin = async (data: LoginFormValues) => {
     setIsSubmitting(true)
-    const { email, password } = data;
-    const success = await login(email, password);
-    if (success === true) {
-      toast.success('Login successful!');
-      navigate('/dashboard');
-    } else if (success){
-      toast.error(success);
-    }
-    else {
-      toast.error("Something went wrong. please try again later");
-    }
+    const { email, password } = data;   
+    await callApi({endpoint: "auth/login", method: "post", body: { email, password}, onSuccess: onLoginSuccess, onError: onLoginError},)
     setIsSubmitting(false);
   };
 
   const handleRegister = async (data: RegisterFormValues) => {
     setIsSubmitting(true);
     const { name, email, password } = data;
-    const success = await register(name, email, password);
-    if (success === true) {
-      toast.success('Registration successful!');
-      navigate('/auth/register/success');
-    } else if (success) {
-      toast.error(success);
-    } else {
-      toast.error('Something went wrong. Please try again');
-    }
-    setIsSubmitting(false)
+    await callApi({endpoint: "auth/register", method: "post", body: { name, email, password}, onSuccess: onRegisterSuccess, onError: onRegisterError},)
   };
 
   return (
@@ -131,7 +135,9 @@ export default function Auth() {
                   />
                   {loginErrors.password && <p className="text-sm text-red-500">{loginErrors.password.message}</p>}
                 </div>
-
+                {
+                  logErrors !== "" && <p className="text-sm text-red-500">{logErrors}</p>
+                }
                 <Button disabled={isSubmitting} type="submit" 
                   className={`w-full text-white font-semibold py-2 rounded-md transition-colors ${
                         isSubmitting

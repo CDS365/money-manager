@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from './apiClient';
 
 type ApiMethod = 'get' | 'post' | 'put' | 'delete';
@@ -21,9 +22,14 @@ export async function callApi<T>({
     const response = await api.request<T>({
       url: endpoint,
       method,
-      data: body,
+      data: JSON.stringify(body),
     });
-    onSuccess?.(response.data);
+    if(response.status === 200 || response.status === 201) {
+      onSuccess?.(response.data);
+    }
+    else {
+      onError?.(response.data);
+    }    
   } catch (error: any) {
     onError?.(error);
   }
