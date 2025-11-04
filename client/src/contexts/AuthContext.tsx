@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect, Dispatch, SetSta
 import { useNavigate } from 'react-router-dom';
 
 export interface User {
+  [x: string]: string;
   id: string;
   name: string;
   email: string;

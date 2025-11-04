@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Bell, Plus, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from './ui/button';
+// import { Button } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,10 +26,10 @@ export const Header = () => {
     <header className="glass-morphism border-b sticky top-0 z-10">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-4">
-          <Button className="gap-2">
+          {/* <Button className="gap-2">
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">Add Expense</span>
-          </Button>
+          </Button> */}
         </div>
 
         <div className="flex items-center gap-4">
