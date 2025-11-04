@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { useData } from '@/contexts/DataContext';
 import { Button } from '@/components/ui/button';
@@ -6,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -82,8 +84,11 @@ export default function Transactions() {
             <DialogHeader>
               <DialogTitle>Add New Transaction</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4">
-              <div className="space-y-2">
+            <DialogBody>
+            <div className="space-y-4 over">
+
+              <div className='flex gap-2'>
+              <div className="space-y-2 w-full">
                 <Label>Type</Label>
                 <Select value={type} onValueChange={(v: any) => setType(v)}>
                   <SelectTrigger>
@@ -97,7 +102,7 @@ export default function Transactions() {
                 </Select>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 w-full">
                 <Label>Amount</Label>
                 <Input
                   type="number"
@@ -106,17 +111,9 @@ export default function Transactions() {
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
-
-              <div className="space-y-2">
-                <Label>Category</Label>
-                <Input
-                  placeholder="e.g., Food, Transport, Salary"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                />
               </div>
-
-              <div className="space-y-2">
+              <div className='flex gap-2'>
+                <div className="space-y-2 w-full">
                 <Label>Account</Label>
                 <Select value={accountId} onValueChange={setAccountId}>
                   <SelectTrigger>
@@ -131,7 +128,23 @@ export default function Transactions() {
                   </SelectContent>
                 </Select>
               </div>
-
+               <div className="space-y-2 w-full">
+                <Label>Date</Label>
+                <Input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+              </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Category</Label>
+                <Input
+                  placeholder="e.g., Food, Transport, Salary"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                />
+              </div>
               <div className="space-y-2">
                 <Label>Description</Label>
                 <Input
@@ -140,20 +153,11 @@ export default function Transactions() {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-
-              <div className="space-y-2">
-                <Label>Date</Label>
-                <Input
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
-              </div>
-
               <Button onClick={handleSubmit} className="w-full">
                 Add Transaction
               </Button>
             </div>
+            </DialogBody>
           </DialogContent>
         </Dialog>
       </div>
